@@ -9,6 +9,7 @@ export interface ParcelRequest {
   userId: string;
   createdAt: Date;
   status: 'pending' | 'accepted' | 'completed' | 'cancelled';
+  username?: string;
 }
 
 export interface User {

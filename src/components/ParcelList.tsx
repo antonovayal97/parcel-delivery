@@ -117,14 +117,18 @@ export const ParcelList: React.FC<ParcelListProps> = ({
                     </button>
                   )
                 ) : (
-                  // Если это чужая заявка - показываем кнопку принятия
-                  onAccept && (
-                    <button 
-                      className="btn flex-1" 
-                      onClick={() => onAccept(request.id)}
+                  // Если это чужая заявка - показываем кнопку "Связаться" (если есть username)
+                  request.username ? (
+                    <a
+                      className="btn flex-1"
+                      href={`https://t.me/${request.username}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
-                      Завершить
-                    </button>
+                      Связаться
+                    </a>
+                  ) : (
+                    <span className="btn flex-1 btn-secondary cursor-not-allowed opacity-60">Нет Telegram</span>
                   )
                 )}
                 {/* Кнопка "Отменить" показывается только для своих заявок */}
