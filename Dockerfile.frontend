@@ -1,0 +1,27 @@
+FROM node:18-alpine
+
+# Устанавливаем рабочую директорию
+WORKDIR /app
+
+# Копируем package.json и package-lock.json
+COPY package*.json ./
+
+# Устанавливаем зависимости с retry
+RUN npm install --no-audit --no-fund
+
+# Копируем исходный код
+COPY . .
+
+# Создаем пользователя для безопасности
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nodejs -u 1001
+
+# Меняем владельца файлов
+RUN chown -R nodejs:nodejs /app
+USER nodejs
+
+# Открываем порт
+EXPOSE 5173
+
+# Команда для запуска в режиме разработки
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"] 

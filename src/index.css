@@ -1,0 +1,360 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  overflow-y: scroll;
+}
+body {
+  scrollbar-gutter: stable;
+}
+
+@layer base {
+  body {
+    @apply bg-tg-bg text-tg-text font-sans antialiased;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply bg-tg-button text-tg-button-text border-none py-3 px-6 rounded-lg text-base font-medium cursor-pointer transition-opacity duration-200 w-full my-2 hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-tg-secondary-bg text-tg-text;
+  }
+
+  .btn-danger {
+    @apply bg-toast-error-bg text-toast-error-text hover:opacity-80;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl p-4 my-2 border border-gray-200;
+  }
+
+  .form-group {
+    @apply mb-4;
+  }
+
+  .form-label {
+    @apply block mb-2 font-medium text-tg-text;
+  }
+
+  .form-input {
+    @apply w-full p-3 border border-tg-hint rounded-lg text-base bg-tg-bg text-tg-text focus:outline-none focus:border-tg-button;
+  }
+
+  .city-select {
+    @apply w-full p-3 pr-10 border border-tg-hint rounded-lg text-base bg-tg-bg text-tg-text appearance-none cursor-pointer;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23666' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.75rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+  }
+
+  .city-select:focus {
+    @apply outline-none border-tg-button;
+  }
+
+  .city-select:disabled {
+    @apply opacity-50 cursor-not-allowed bg-gray-100;
+  }
+
+  .header {
+    @apply text-center mb-4;
+  }
+
+  .header h1 {
+    @apply text-xl font-semibold mb-1;
+  }
+
+  .header p {
+    @apply text-tg-hint text-xs;
+  }
+
+  .navbar {
+    @apply flex mb-6 bg-tg-secondary-bg rounded-lg p-1 gap-1;
+  }
+
+  .nav-item {
+    @apply flex-1;
+  }
+
+  .nav-link {
+    @apply flex flex-col items-center py-2 px-1 text-center rounded-md cursor-pointer transition-all duration-200 font-medium text-sm;
+  }
+
+  .nav-link.active {
+    @apply bg-tg-button text-tg-button-text;
+  }
+
+  .nav-link:not(.active) {
+    @apply text-tg-text;
+  }
+
+  .nav-icon {
+    @apply text-lg mb-1;
+  }
+
+  .nav-text {
+    @apply text-xs;
+  }
+
+  /* Новые классы для статусов */
+  .status-badge {
+    @apply px-2 py-1 rounded text-xs font-medium;
+  }
+
+  .status-pending {
+    @apply bg-status-pending-bg text-status-pending-text border border-status-pending-border;
+  }
+
+  .status-accepted {
+    @apply bg-status-accepted-bg text-status-accepted-text border border-status-accepted-border;
+  }
+
+  .status-completed {
+    @apply bg-status-completed-bg text-status-completed-text border border-status-completed-border;
+  }
+
+  .status-cancelled {
+    @apply bg-status-cancelled-bg text-status-cancelled-text border border-status-cancelled-border;
+  }
+
+  /* Классы для типов заявок */
+  .type-badge {
+    @apply px-2 py-1 rounded text-xs font-medium;
+  }
+
+  .type-send {
+    @apply bg-type-send-bg text-type-send-text border border-type-send-border;
+  }
+
+  .type-receive {
+    @apply bg-type-receive-bg text-type-receive-text border border-type-receive-border;
+  }
+
+  /* Классы для кредитов */
+  .credits-status {
+    @apply rounded-lg p-3 border;
+  }
+
+  .credits-zero {
+    @apply bg-credits-zero-bg text-credits-zero-text border-credits-zero-border;
+  }
+
+  .credits-low {
+    @apply bg-credits-low-bg text-credits-low-text border-credits-low-border;
+  }
+
+  .credits-good {
+    @apply bg-credits-good-bg text-credits-good-text border-credits-good-border;
+  }
+
+  .success-message {
+    @apply bg-status-completed-bg text-status-completed-text p-4 rounded-lg my-4 text-center border border-status-completed-border;
+  }
+
+  .error-message {
+    @apply bg-status-cancelled-bg text-status-cancelled-text p-4 rounded-lg my-4 text-center border border-status-cancelled-border;
+  }
+
+  .validation-errors {
+    @apply bg-status-cancelled-bg border border-status-cancelled-border rounded-lg p-4 my-4;
+  }
+
+  .error-title {
+    @apply text-status-cancelled-text font-medium mb-2;
+  }
+
+  .error-list {
+    @apply list-disc list-inside space-y-1;
+  }
+
+  .error-item {
+    @apply text-status-cancelled-text text-sm;
+  }
+
+  /* Стили для всплывающих уведомлений */
+  .toast-container {
+    @apply fixed top-0 right-0 z-50 pointer-events-none;
+  }
+
+  .toast-notification {
+    @apply pointer-events-auto;
+  }
+
+  /* Анимации для уведомлений */
+  @keyframes slideInRight {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideOutRight {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+
+  .toast-enter {
+    animation: slideInRight 0.3s ease-out;
+  }
+
+  .toast-exit {
+    animation: slideOutRight 0.3s ease-in;
+  }
+
+  .navbar-bottom {
+    @apply fixed left-1/2 -translate-x-1/2 z-50 flex w-4/5 items-center justify-around rounded-t-2xl bg-white shadow-lg;
+    height: 64px;
+    box-shadow: 0 -2px 16px 0 rgba(0, 0, 0, 0.08);
+    border: 2px solid #e5e7eb;
+    border-radius: 16px;
+    bottom: 10px;
+  }
+  .nav-bottom-item {
+    @apply flex flex-col items-center justify-center flex-1 cursor-pointer relative transition-all duration-200;
+    color: #888;
+    height: 100%;
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+  .nav-bottom-item.active {
+    color: #2563eb;
+    font-weight: 600;
+    background: rgba(37, 99, 235, 0.08);
+    border-radius: 16px;
+  }
+  .nav-bottom-icon {
+    font-size: 18px;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+  .nav-bottom-label {
+    font-size: 12px;
+    line-height: 1;
+    text-align: center;
+  }
+  .nav-bottom-indicator {
+    position: absolute;
+    left: 50%;
+    bottom: 4px;
+    transform: translateX(-50%);
+    width: 28px;
+    height: 4px;
+    border-radius: 2px;
+    background: #2563eb;
+    content: "";
+    display: block;
+  }
+
+  .navbar-floating {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #2563eb;
+    border-radius: 32px;
+    box-shadow: 0 8px 32px 0 rgba(37, 99, 235, 0.18),
+      0 2px 8px 0 rgba(0, 0, 0, 0.1);
+    padding: 8px 18px;
+    min-width: 320px;
+    max-width: 95vw;
+    z-index: 100;
+  }
+  .nav-float-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 500;
+    border-radius: 24px;
+    padding: 0 10px;
+    height: 44px;
+    min-width: 44px;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+  }
+  .nav-float-item.active {
+    background: #fff;
+    color: #2563eb;
+    box-shadow: 0 2px 8px 0 rgba(37, 99, 235, 0.1);
+    padding: 0 18px;
+  }
+  .nav-float-icon {
+    font-size: 22px;
+    margin-right: 0;
+  }
+  .nav-float-item.active .nav-float-icon {
+    margin-right: 8px;
+  }
+  .nav-float-label {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .navbar-minimal-floating {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    display: flex;
+    background: #2563eb;
+    border-radius: 32px;
+    box-shadow: 0 8px 32px 0 rgba(37, 99, 235, 0.18);
+    padding: 8px;
+    z-index: 100;
+  }
+  .nav-minimal-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 18px;
+    border-radius: 24px;
+    padding: 0 12px;
+    height: 44px;
+    min-width: 44px;
+    cursor: pointer;
+    transition: background 0.18s;
+  }
+  .nav-minimal-icon {
+    font-size: 22px;
+  }
+  .nav-minimal-label {
+    font-size: 16px;
+    font-weight: 600;
+    margin-left: 8px;
+  }
+
+  .tabs {
+    @apply flex bg-tg-secondary-bg rounded-lg p-1 gap-1;
+  }
+
+  .tab {
+    @apply flex-1 text-center py-2 px-3 rounded-md cursor-pointer transition-all duration-200 font-medium text-sm;
+  }
+
+  .tab.active {
+    @apply bg-tg-button text-tg-button-text;
+  }
+
+  .tab:not(.active) {
+    @apply text-tg-text hover:bg-white hover:text-tg-text;
+  }
+}
