@@ -18,7 +18,7 @@ const parcelRequestValidation = [
   body("description").notEmpty().withMessage("Описание посылки обязательно"),
   body("weight")
     .isFloat({ min: 0.1 })
-    .withMessage("Вес должен быть положительным числом"),
+    .withMessage("Вес посылки должен быть минимум 0.1 кг"),
   body("contactName").notEmpty().withMessage("Имя контакта обязательно"),
   body("userId").notEmpty().withMessage("ID пользователя обязателен"),
   body("tripDate")

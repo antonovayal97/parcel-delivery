@@ -193,7 +193,7 @@ export const ParcelForm: React.FC<ParcelFormProps> = ({ onSubmit, loading = fals
           className="form-input"
           value={formData.weight}
           onChange={(e) => handleInputChange('weight', parseFloat(e.target.value) || 0)}
-          min="0"
+          min="0.1"
           step="0.1"
           required
         />
