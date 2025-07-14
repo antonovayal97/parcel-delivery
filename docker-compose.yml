@@ -1,16 +1,13 @@
 version: "3.8"
 
 services:
-  # PostgreSQL база данных
   postgres:
     image: postgres:15-alpine
-    container_name: parcel_delivery_postgres
+    container_name: parcel_delivery_postgres_prod
     environment:
       POSTGRES_DB: parcel_delivery
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -21,13 +18,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
 
-  # Redis кэш
   redis:
     image: redis:7-alpine
-    container_name: parcel_delivery_redis
-    ports:
-      - "6379:6379"
+    container_name: parcel_delivery_redis_prod
     volumes:
       - redis_data:/data
     networks:
@@ -37,17 +32,17 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
 
-  # Backend API
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: parcel_delivery_backend
+    container_name: parcel_delivery_backend_prod
     env_file:
       - ./backend/.env
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
       - PORT=8000
       - DB_HOST=postgres
       - DB_PORT=5432
@@ -55,13 +50,11 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=password
       - REDIS_URL=redis://redis:6379
-      - JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
-      - FRONTEND_URL=http://localhost:5173
+      - JWT_SECRET=your-super-secret-jwt-key
+      - BOT_TOKEN=7322426259:AAFO-nVyDdJZbWoC7hu2nHpEW_2ss03Vo0o
+      - FRONTEND_URL=https://parcel-delivery.tw1.ru
     ports:
-      - "8001:8000"
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
+      - "8000:8000"
     depends_on:
       postgres:
         condition: service_healthy
@@ -71,19 +64,15 @@ services:
       - parcel_network
     restart: unless-stopped
 
-  # Frontend (React приложение)
   frontend:
     build:
       context: .
       dockerfile: Dockerfile.frontend
-    container_name: parcel_delivery_frontend
+    container_name: parcel_delivery_frontend_prod
     environment:
-      - VITE_API_URL=http://localhost:8001/api
+      - VITE_API_URL=https://parcel-delivery.tw1.ru/api
     ports:
-      - "5173:3000"
-    volumes:
-      - ./src:/app/src
-      - /app/node_modules
+      - "3000:3000"
     depends_on:
       - backend
     networks:
