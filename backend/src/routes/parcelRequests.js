@@ -216,18 +216,33 @@ router.post(
         return res.status(404).json({ message: "Пользователь не найден" });
       }
 
-      // БЕСПЛАТНОЕ СОЗДАНИЕ ДЛЯ ВСЕХ
-      await pool.query(
-        `INSERT INTO credit_transactions (user_id, amount, type, description) 
-         VALUES ($1, $2, 'deduct', $3)`,
-        [
-          userId,
-          0,
-          `Бесплатное создание заявки на ${
-            type === "send" ? "отправку" : "получение"
-          }`,
-        ]
-      );
+      const userCredits = userResult.rows[0].credits;
+      const userRole = userResult.rows[0].role;
+
+      // Админы могут создавать заявки бесплатно
+      if (userRole !== "admin") {
+        if (userCredits < 20) {
+          return res
+            .status(402)
+            .json({ message: "Недостаточно кредитов для создания заявки" });
+        }
+        // Списываем 20 кредитов
+        await pool.query(
+          `UPDATE users SET credits = credits - 20 WHERE id = $1`,
+          [userId]
+        );
+        await pool.query(
+          `INSERT INTO credit_transactions (user_id, amount, type, description) 
+           VALUES ($1, $2, 'deduct', $3)`,
+          [
+            userId,
+            20,
+            `Платное создание заявки на ${
+              type === "send" ? "отправку" : "получение"
+            }`,
+          ]
+        );
+      }
 
       // Создаем новую заявку
       const newRequest = await pool.query(

@@ -102,9 +102,6 @@ export const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
       <div className={`${creditsStatus.class} p-3 mb-3`}>
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center mr-2">
-              <span className="text-white text-sm font-bold">₽</span>
-            </div>
             <div>
               <div className="flex items-center">
                 <p className="text-sm text-tg-hint mr-2">Кредиты</p>
