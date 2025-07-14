@@ -233,8 +233,8 @@ router.post(
       const newRequest = await pool.query(
         `INSERT INTO parcel_requests (
           type, from_city, to_city, description, weight,
-          contact_name, user_id, trip_date, status
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) 
+          contact_name, user_id, trip_date, status, dimensions
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
         RETURNING *`,
         [
           type,
@@ -246,6 +246,7 @@ router.post(
           userId,
           tripDate || null, // Используем null для пустых дат
           "pending",
+          req.body.dimensions || "", // Добавляем dimensions, если не передано — пустая строка
         ]
       );
 
