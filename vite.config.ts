@@ -7,10 +7,6 @@ export default defineConfig({
     port: 3000,
     host: true,
     allowedHosts: [
-      '5047389798f0.ngrok-free.app',
-      'dcb9e5c91397.ngrok-free.app',
-      '.ngrok-free.app',
-      '.ngrok.io',
       'parcel-delivery.tw1.ru'
     ]
   },
