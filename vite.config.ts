@@ -10,7 +10,8 @@ export default defineConfig({
       '5047389798f0.ngrok-free.app',
       'dcb9e5c91397.ngrok-free.app',
       '.ngrok-free.app',
-      '.ngrok.io'
+      '.ngrok.io',
+      'parcel-delivery.tw1.ru'
     ]
   },
   build: {
