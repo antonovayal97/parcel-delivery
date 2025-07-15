@@ -8,12 +8,12 @@ services:
       POSTGRES_DB: parcel_delivery
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      # Настройки для высоких нагрузок
-      POSTGRES_SHARED_BUFFERS: 256MB
-      POSTGRES_EFFECTIVE_CACHE_SIZE: 1GB
-      POSTGRES_WORK_MEM: 4MB
-      POSTGRES_MAINTENANCE_WORK_MEM: 64MB
-      POSTGRES_MAX_CONNECTIONS: 200
+      # Настройки для 1 CPU сервера
+      POSTGRES_SHARED_BUFFERS: 128MB
+      POSTGRES_EFFECTIVE_CACHE_SIZE: 512MB
+      POSTGRES_WORK_MEM: 2MB
+      POSTGRES_MAINTENANCE_WORK_MEM: 32MB
+      POSTGRES_MAX_CONNECTIONS: 50
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -28,11 +28,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "4"
-          memory: 4G
+          cpus: "0.8"
+          memory: 1G
         reservations:
-          cpus: "2"
-          memory: 2G
+          cpus: "0.3"
+          memory: 512M
 
   redis:
     image: redis:7-alpine
@@ -51,11 +51,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "2"
-          memory: 2G
+          cpus: "0.3"
+          memory: 512M
         reservations:
-          cpus: "1"
-          memory: 1G
+          cpus: "0.1"
+          memory: 256M
 
   backend:
     build:
@@ -90,17 +90,14 @@ services:
       - parcel_network
     restart: unless-stopped
     deploy:
-      replicas: 4 # 4 экземпляра backend
+      replicas: 1 # 1 экземпляр backend для 1 CPU
       resources:
         limits:
-          cpus: "2"
-          memory: 2G
-        reservations:
-          cpus: "1"
+          cpus: "0.4"
           memory: 1G
-      update_config:
-        parallelism: 1
-        delay: 10s
+        reservations:
+          cpus: "0.2"
+          memory: 512M
       restart_policy:
         condition: on-failure
         delay: 5s
@@ -123,11 +120,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "1"
-          memory: 512M
-        reservations:
-          cpus: "0.5"
+          cpus: "0.2"
           memory: 256M
+        reservations:
+          cpus: "0.1"
+          memory: 128M
 
   frontend:
     build:
@@ -144,14 +141,14 @@ services:
       - parcel_network
     restart: unless-stopped
     deploy:
-      replicas: 2 # 2 экземпляра frontend
+      replicas: 1 # 1 экземпляр frontend для 1 CPU
       resources:
         limits:
-          cpus: "1"
-          memory: 1G
-        reservations:
-          cpus: "0.5"
+          cpus: "0.3"
           memory: 512M
+        reservations:
+          cpus: "0.1"
+          memory: 256M
 
 volumes:
   postgres_data:
