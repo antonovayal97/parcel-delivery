@@ -12,6 +12,8 @@ import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import parcelRoutes from "./routes/parcelRequests.js";
 import creditRoutes from "./routes/credits.js";
+import adminStatsRouter from "./routes/adminStats.js";
+import adminAuthRouter from "./routes/adminAuth.js";
 
 // Загрузка переменных окружения
 dotenv.config();
@@ -82,6 +84,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/parcel-requests", parcelRoutes);
 app.use("/api/credits", creditRoutes);
+app.use("/api/admin", adminAuthRouter);
+app.use("/api/admin", adminStatsRouter);
 
 // Health check
 app.get("/api/health", (req, res) => {

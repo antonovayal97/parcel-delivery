@@ -114,6 +114,7 @@ services:
     depends_on:
       - backend
       - frontend
+      - admin-frontend
     networks:
       - parcel_network
     restart: unless-stopped
@@ -149,6 +150,30 @@ services:
         reservations:
           cpus: "0.1"
           memory: 256M
+
+  admin-frontend:
+    build:
+      context: ./admin-frontend
+      dockerfile: Dockerfile
+    container_name: parcel_delivery_admin_frontend_prod
+    environment:
+      - VITE_API_URL=https://parcel-delivery.tw1.ru/api
+    ports:
+      - "3001:3000"
+    depends_on:
+      - backend
+    networks:
+      - parcel_network
+    restart: unless-stopped
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 256M
+        reservations:
+          cpus: "0.1"
+          memory: 128M
 
 volumes:
   postgres_data:
