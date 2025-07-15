@@ -8,6 +8,12 @@ services:
       POSTGRES_DB: parcel_delivery
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
+      # Настройки для высоких нагрузок
+      POSTGRES_SHARED_BUFFERS: 256MB
+      POSTGRES_EFFECTIVE_CACHE_SIZE: 1GB
+      POSTGRES_WORK_MEM: 4MB
+      POSTGRES_MAINTENANCE_WORK_MEM: 64MB
+      POSTGRES_MAX_CONNECTIONS: 200
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -19,10 +25,19 @@ services:
       timeout: 5s
       retries: 5
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "4"
+          memory: 4G
+        reservations:
+          cpus: "2"
+          memory: 2G
 
   redis:
     image: redis:7-alpine
     container_name: parcel_delivery_redis_prod
+    command: redis-server --maxmemory 1gb --maxmemory-policy allkeys-lru
     volumes:
       - redis_data:/data
     networks:
@@ -33,6 +48,14 @@ services:
       timeout: 5s
       retries: 5
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2G
+        reservations:
+          cpus: "1"
+          memory: 1G
 
   backend:
     build:
@@ -49,7 +72,10 @@ services:
       - DB_NAME=parcel_delivery
       - DB_USER=postgres
       - DB_PASSWORD=password
+      - DB_POOL_MAX=50
+      - DB_POOL_MIN=10
       - REDIS_URL=redis://redis:6379
+      - RATE_LIMIT_MAX=2000
       - JWT_SECRET=your-super-secret-jwt-key
       - BOT_TOKEN=7322426259:AAFO-nVyDdJZbWoC7hu2nHpEW_2ss03Vo0o
       - FRONTEND_URL=https://parcel-delivery.tw1.ru
@@ -63,6 +89,45 @@ services:
     networks:
       - parcel_network
     restart: unless-stopped
+    deploy:
+      replicas: 4 # 4 экземпляра backend
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2G
+        reservations:
+          cpus: "1"
+          memory: 1G
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+  nginx:
+    image: nginx:alpine
+    container_name: parcel_delivery_nginx_prod
+    volumes:
+      - ./backend/docker/nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - parcel_network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 512M
+        reservations:
+          cpus: "0.5"
+          memory: 256M
 
   frontend:
     build:
@@ -78,6 +143,15 @@ services:
     networks:
       - parcel_network
     restart: unless-stopped
+    deploy:
+      replicas: 2 # 2 экземпляра frontend
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.5"
+          memory: 512M
 
 volumes:
   postgres_data:
