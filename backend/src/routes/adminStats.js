@@ -1,7 +1,5 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-
-// Импорт middleware для проверки токена и роли
 import { authenticateToken, requireRole } from "../middleware/auth.js";
 
 router.get(
@@ -22,12 +20,9 @@ router.get(
       );
       const parcels = parseInt(parcelsResult.rows[0].count);
 
-      // Можно добавить другие метрики по необходимости
-
       res.json({
         users,
         parcels,
-        // добавьте другие метрики по необходимости
       });
     } catch (error) {
       console.error("Ошибка получения статистики:", error);
@@ -36,4 +31,4 @@ router.get(
   }
 );
 
-module.exports = router;
+export default router;
