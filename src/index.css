@@ -347,7 +347,7 @@ body {
   }
 
   .tab {
-    @apply flex-1 text-center py-2 px-3 rounded-md cursor-pointer transition-all duration-200 font-medium text-sm;
+    @apply flex justify-center items-center flex-1 text-center py-2 px-3 rounded-md cursor-pointer transition-all duration-200 font-medium text-sm;
   }
 
   .tab.active {

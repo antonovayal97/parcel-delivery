@@ -189,7 +189,7 @@ export const AllRequests: React.FC<AllRequestsProps> = ({
                 setFilterCity('');
               }}
             >
-              Из России
+              Из <br/>России
             </div>
             <div 
               className={`tab ${filterRoute === 'from-thailand' ? 'active' : ''}`}
@@ -198,7 +198,7 @@ export const AllRequests: React.FC<AllRequestsProps> = ({
                 setFilterCity('');
               }}
             >
-              Из Таиланда
+              Из <br/>Таиланда
             </div>
           </div>
         </div>
